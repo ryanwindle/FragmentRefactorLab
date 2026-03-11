@@ -11,17 +11,26 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val displayTextView = findViewById<TextView>(R.id.displayTextView)
+        //val displayTextView = findViewById<TextView>(R.id.displayTextView)
         val nameEditText = findViewById<EditText>(R.id.nameEditText)
         val changeButton = findViewById<Button>(R.id.changeButton)
 
-        changeButton.setOnClickListener {
-            val name = nameEditText.text
+        if (savedInstanceState == null) {
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.fragmentContainerView, GreetingActivity.newInstance("Hello World"))
+                .commit()
 
-            displayTextView.text = if (name.isNotBlank()) {
-                "Hello, $name!"
-            } else {
-                "Please enter your name"
+            changeButton.setOnClickListener {
+                val name = nameEditText.text.toString()
+                val message = if (name.isEmpty()){
+                    "please enter your name"
+                } else {
+                    "Hello $name"
+                }
+
+                supportFragmentManager.beginTransaction()
+                    .replace(R.id.fragmentContainerView, GreetingActivity.newInstance(message))
+                    .commit()
             }
         }
     }
